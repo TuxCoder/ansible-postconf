@@ -353,6 +353,17 @@ postconf__postfix__dependent_mastercf:
                else "ignore" }}'
     copy_id_from: 'cleanup'
     weight: 10
+
+  - name: 'policy-spf'
+    type: 'unix'
+    unpriv: False
+    chroot: False
+    command: 'spawn'
+    args: 'user=nobody argv=/usr/bin/policyd-spf'
+    state: '{{ "present"
+               if ("spf" in postconf__combined_capabilities)
+               else "ignore" }}'
+
                                                                    # ]]]
                                                                    # ]]]
                                                                    # ]]]

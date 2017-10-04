@@ -7,6 +7,15 @@
   environment: '{{ inventory__environment | d({})
                    | combine(inventory__group_environment | d({}))
                    | combine(inventory__host_environment  | d({})) }}'
+  tasks:
+    - name: 'install deps'
+      apt:
+        package: '{{ item }}'
+        state: 'present'
+      with_items:  '{{ [ "postfix-policyd-spf-python" ]
+               if ("spf" in postconf__combined_capabilities)
+               else [] }}'
+
 
   roles:
 
