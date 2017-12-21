@@ -1,5 +1,2 @@
 ---
 
-- name: Prepare postconf environment
-  set_fact:
-    postconf__env_capabilities: '{{ lookup("template", "lookup/postconf__env_capabilities.j2") }}'

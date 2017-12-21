@@ -1,7 +1,7 @@
 ---
 
 - name: Manage Postfix configuration
-  hosts: [ 'debops_service_postconf' ]
+  hosts: [ 'debops_service_postpolicy' ]
   become: True
 
   environment: '{{ inventory__environment | d({})
@@ -10,35 +10,25 @@
 
   roles:
 
-    - role: debops.postconf/env
-      tags: [ 'role::postconf', 'role::postfix', 'role::ferm' ]
+    - role: debops.postpolicy/env
+      tags: [ 'role::postpolicy', 'role::postfix', 'role::ferm' ]
 
     - role: debops.postfix/env
       tags: [ 'role::postfix', 'role::secret', 'role::ferm' ]
       postfix__dependent_mastercf:
-        - role: 'postconf'
-          config: '{{ postconf__postfix__dependent_mastercf }}'
-
-    - role: debops.secret
-      tags: [ 'role::secret', 'role::postfix' ]
-      secret__directories:
-        - '{{ postfix__secret__directories }}'
-
-    - role: debops.ferm
-      tags: [ 'role::ferm' ]
-      ferm__dependent_rules:
-        - '{{ postfix__ferm__dependent_rules }}'
+        - role: 'postpolicy'
+          config: '{{ postpolicy__postfix__dependent_mastercf }}'
 
     - role: debops.postfix
       tags: [ 'role::postfix' ]
       postfix__dependent_maincf:
-        - role: 'postconf'
-          config: '{{ postconf__postfix__dependent_maincf }}'
+        - role: 'postpolicy'
+          config: '{{ postpolicy__postfix__dependent_maincf }}'
       postfix__dependent_mastercf:
-        - role: 'postconf'
-          config: '{{ postconf__postfix__dependent_mastercf }}'
+        - role: 'postpolicy'
+          config: '{{ postpolicy__postfix__dependent_mastercf }}'
       postfix__dependent_lookup_tables:
-        - '{{ postconf__postfix__dependent_lookup_tables }}'
+        - '{{ postpolicy__postfix__dependent_lookup_tables }}'
 
-    - role: debops.postconf
-      tags: [ 'role::postconf' ]
+    - role: debops.postpolicy
+      tags: [ 'role::postpolicy' ]
