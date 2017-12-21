@@ -274,7 +274,7 @@ postconf__postfix__dependent_maincf:
       - name: 'check_helo_mx_access cidr:${config_directory}/mx_access.cidr'
     state: '{{ "present"
                if ("public-mx-required" in postconf__combined_capabilities)
-               else "ignore" }}'
+               else "absent" }}'
 
   - name: 'smtpd_sender_restrictions'
     value:
@@ -282,7 +282,7 @@ postconf__postfix__dependent_maincf:
         weight: 50
     state: '{{ "present"
                if ("public-mx-required" in postconf__combined_capabilities)
-               else "ignore" }}'
+               else "absent" }}'
 
   - name: 'smtpd_sender_restrictions'
     value:
@@ -358,6 +358,7 @@ postconf__postfix__dependent_mastercf:
     type: 'unix'
     unpriv: False
     chroot: False
+    maxproc: 0
     command: 'spawn'
     args: 'user=nobody argv=/usr/bin/policyd-spf'
     state: '{{ "present"
